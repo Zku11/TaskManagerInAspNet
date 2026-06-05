@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManagerInAspNet;
 
@@ -11,9 +12,11 @@ using TaskManagerInAspNet;
 namespace TaskManagerInAspNet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260604222041_UserTaskTitleConfig")]
+    partial class UserTaskTitleConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,32 +24,6 @@ namespace TaskManagerInAspNet.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("TaskManagerInAspNet.Entities.Step", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Done")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserTaskId");
-
-                    b.ToTable("Steps");
-                });
 
             modelBuilder.Entity("TaskManagerInAspNet.Entities.UserTask", b =>
                 {
@@ -74,22 +51,6 @@ namespace TaskManagerInAspNet.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserTasks");
-                });
-
-            modelBuilder.Entity("TaskManagerInAspNet.Entities.Step", b =>
-                {
-                    b.HasOne("TaskManagerInAspNet.Entities.UserTask", "UserTask")
-                        .WithMany("Steps")
-                        .HasForeignKey("UserTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserTask");
-                });
-
-            modelBuilder.Entity("TaskManagerInAspNet.Entities.UserTask", b =>
-                {
-                    b.Navigation("Steps");
                 });
 #pragma warning restore 612, 618
         }

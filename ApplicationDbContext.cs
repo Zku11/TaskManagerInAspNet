@@ -9,6 +9,12 @@ namespace TaskManagerInAspNet
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<UserTask> UserTasks { get; set; }
+        public DbSet<Step> Steps { get; set; }
     }
 }
