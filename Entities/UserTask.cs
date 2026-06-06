@@ -12,5 +12,6 @@ namespace TaskManagerInAspNet.Entities
         public int Order { get; set; }
         public DateTime CreatedDate { get; set; }
         public List<Step> Steps { get; set; }
+        public List<AttachedFile> AttachedFiles { get; set; }
     }
 }

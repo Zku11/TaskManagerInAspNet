@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TaskManagerInAspNet.Entities;
 
 namespace TaskManagerInAspNet
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -16,5 +17,6 @@ namespace TaskManagerInAspNet
 
         public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<Step> Steps { get; set; }
+        public DbSet<AttachedFile> AttachedFiles { get; set; }
     }
 }
