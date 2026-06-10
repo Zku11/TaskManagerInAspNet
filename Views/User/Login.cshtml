@@ -15,7 +15,7 @@
 
 <div class="card">
 	<div class="card-body">
-		<form asp-action="Login">
+		<form asp-action="Login" method="get">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 			<div class="mb-3">
@@ -37,6 +37,7 @@
 
 			<button class="btn btn-primary">Enviar</button>
 			<a class="btn btn-success" asp-action="Register">Crear cuenta</a>
+			<a class="btn btn-success" asp-action="ExternalLogin" asp-route-provider="Microsoft">Continuar con Microsoft</a>
 		</form>
 	</div>
 </div>

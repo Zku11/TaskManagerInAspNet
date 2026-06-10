@@ -97,7 +97,7 @@ namespace TaskManagerInAspNet.Controllers
         public ChallengeResult ExternalLogin(string provider, string? returnUrl = null)
         {
             var redirectUrl = Url.Action("RegisterExternalUser", values: new { returnUrl });
-            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, returnUrl);
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
 

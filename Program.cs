@@ -18,7 +18,25 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=DefaultConnection"));
-builder.Services.AddAuthentication();
+
+builder.Services.AddAuthentication().AddMicrosoftAccount(options =>
+{
+    options.ClientId = builder.Configuration["MicrosoftClientId"];
+    options.ClientSecret = builder.Configuration["MicrosoftSecretId"];
+
+    options.Events.OnRemoteFailure = context =>
+    {
+        Console.WriteLine(context.Failure?.ToString());
+
+        context.Response.Redirect(
+            "/error?message=" +
+            Uri.EscapeDataString(context.Failure?.ToString() ?? "Unknown")
+        );
+
+        context.HandleResponse();
+        return Task.CompletedTask;
+    };
+});
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
