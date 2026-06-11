@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TaskManagerInAspNet.Models;
+using TaskManagerInAspNet.Servicios;
 
 namespace TaskManagerInAspNet.Controllers
 {
@@ -11,11 +13,13 @@ namespace TaskManagerInAspNet.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly ApplicationDbContext applicationDbContext;
 
-        public UserController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public UserController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ApplicationDbContext applicationDbContext)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.applicationDbContext = applicationDbContext;
         }
 
         [AllowAnonymous]
@@ -94,7 +98,7 @@ namespace TaskManagerInAspNet.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public ChallengeResult ExternalLogin(string provider, string? returnUrl = null)
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
             var redirectUrl = Url.Action("RegisterExternalUser", values: new { returnUrl });
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -147,6 +151,40 @@ namespace TaskManagerInAspNet.Controllers
             }
             message = "Ha ocurrido un error al agregar el login";
             return RedirectToAction("Login", routeValues: new { message });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UsersList(string? message = null)
+        {
+            var users = await applicationDbContext.Users.Select(u => new UserViewModel{ Email = u.Email }).ToListAsync();
+            var model = new UsersListViewModel();
+            model.Users = users;
+            model.Message = message;
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MakeAdministrator(string email)
+        {
+            var user = await applicationDbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            if(user is null)
+            {
+                return NotFound();
+            }
+            await userManager.AddToRoleAsync(user, Constants.AdminRole);
+            return RedirectToAction("UsersList", routeValues: new { message = "Rol asignado a " + email });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveAdministrator(string email)
+        {
+            var user = await applicationDbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            if (user is null)
+            {
+                return NotFound();
+            }
+            await userManager.RemoveFromRoleAsync(user, Constants.AdminRole);
+            return RedirectToAction("UsersList", routeValues: new { message = "Rol removido de " + email });
         }
     }
 }
