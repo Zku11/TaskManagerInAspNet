@@ -1,20 +1,24 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using TaskManagerInAspNet.Models;
 
 namespace TaskManagerInAspNet.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
+        private readonly IStringLocalizer stringLocalizer;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IStringLocalizer<HomeController> stringLocalizer)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.stringLocalizer = stringLocalizer;
         }
 
         public IActionResult Index()
         {
+            ViewBag.greeting = stringLocalizer["Buenos días"];
             return View();
         }
 

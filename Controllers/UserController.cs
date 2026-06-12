@@ -154,6 +154,7 @@ namespace TaskManagerInAspNet.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Constants.AdminRole)]
         public async Task<IActionResult> UsersList(string? message = null)
         {
             var users = await applicationDbContext.Users.Select(u => new UserViewModel{ Email = u.Email }).ToListAsync();
@@ -164,6 +165,7 @@ namespace TaskManagerInAspNet.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.AdminRole)]
         public async Task<IActionResult> MakeAdministrator(string email)
         {
             var user = await applicationDbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
@@ -176,6 +178,7 @@ namespace TaskManagerInAspNet.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.AdminRole)]
         public async Task<IActionResult> RemoveAdministrator(string email)
         {
             var user = await applicationDbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();

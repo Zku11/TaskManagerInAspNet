@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace TaskManagerInAspNet.Entities
 {
@@ -7,11 +8,13 @@ namespace TaskManagerInAspNet.Entities
         public int Id { get; set; }
         [StringLength(250)]
         [Required]
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
         public int Order { get; set; }
         public DateTime CreatedDate { get; set; }
-        public List<Step> Steps { get; set; }
-        public List<AttachedFile> AttachedFiles { get; set; }
+        public string? CreatorUserId { get; set; }
+        public IdentityUser? CreatorUser { get; set; }
+        public List<Step>? Steps { get; set; }
+        public List<AttachedFile>? AttachedFiles { get; set; }
     }
 }
