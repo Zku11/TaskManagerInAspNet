@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using TaskManagerInAspNet;
@@ -17,7 +18,7 @@ var authenticatedUserPolicy = new AuthorizationPolicyBuilder()
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(new AuthorizeFilter(authenticatedUserPolicy));
-});
+}).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=DefaultConnection"));
 
