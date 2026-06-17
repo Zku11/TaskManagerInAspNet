@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer localizer
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,8 +16,8 @@
 <body style="margin:0">
     <div style="display: flex; justify-content: center; align-items: center; height: 100vh">
         <div style="margin-right: 5rem">
-            <h1>Manejador de Tareas</h1>
-            <h2 class="fs-6">En esta aplicación podrás manejar tus tareas.</h2>
+            <h1>@localizer["application.name"]</h1>
+            <h2 class="fs-6">@localizer["application.description"]</h2>
         </div>
         <main role="main" class="pb-3">
             @RenderBody()
