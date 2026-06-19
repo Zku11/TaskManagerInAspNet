@@ -1,21 +1,41 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization;
-@inject IViewLocalizer Localizer;
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Listado de tareas";
 }
 
 <div class="text-center">
-    <h1 class="display-4">@Localizer["Welcome"]</h1>
-    <p>@Localizer["LearnMore"] </p>
+	<h1 class="display-4">@Localizer["My Tasks"]</h1>
 </div>
 
-<div>
-    <h2 class="fs-4">@ViewBag.greeting, usuario</h2>
+<div id="task-list-container" class="text-center">
+	<div class="text-start" data-bind="foreach: userTasks">
+		<div name="task" class="border mb-2 p-2" style="cursor: pointer">
+			<div data-bind="text: title" class="fw-bold">
+
+			</div>
+		</div>
+	</div>
+	<div data-bind="visible: loading" class="spinner-border">
+		<span class="visually-hidden">Cargando...</span>
+	</div>
 </div>
 
-<button onclick="showError()">
-    Mostrar mensaje de error
-</button>
+@section Scripts{
+	<script>
+		const taskListViewModel = {
+			userTasks : ko.observableArray([]),
+			loading: ko.observable(true)
+		}
 
-<script src="~/js/Utilities.js"></script>
+		setTimeout(
+		() => {
+			taskListViewModel.userTasks.push({title: 'Tarea 1'});
+			taskListViewModel.loading(false);
+		}
+		, 2000);
+
+		ko.applyBindings(taskListViewModel, document.getElementById('task-list-container'));
+	</script>
+}

@@ -19,7 +19,6 @@ namespace TaskManagerInAspNet.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.greeting = stringLocalizer["Buenos días"];
             return View();
         }
 
