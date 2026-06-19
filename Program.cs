@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using TaskManagerInAspNet;
+using TaskManagerInAspNet.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,7 +73,7 @@ var supportedUiCultures = new[] {"es", "en"};
 app.UseRequestLocalization(options =>
 {
     options.DefaultRequestCulture = new RequestCulture("es");
-    options.SupportedUICultures = supportedUiCultures.Select(culture => new CultureInfo(culture)).ToList();
+    options.SupportedUICultures = Constants.SupportedUiCultures.Select(culture => new CultureInfo(culture.Value)).ToList();
 });
 
 // Configure the HTTP request pipeline.
