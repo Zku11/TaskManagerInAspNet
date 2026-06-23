@@ -7,34 +7,60 @@
 
 <div class="text-center">
 	<h1 class="display-4">@Localizer["My Tasks"]</h1>
+	<button type="button" class="btn btn-primary mb-3" onclick="addNewTask()">
+		@Localizer["Agregar nueva tarea"]
+	</button>
 </div>
 
 <div id="task-list-container" class="text-center">
 	<div class="text-start" data-bind="foreach: userTasks">
 		<div name="task" class="border mb-2 p-2" style="cursor: pointer">
-			<div data-bind="text: title" class="fw-bold">
-
+			<div data-bind="text: title, hidden: isNew" class="fw-bold">
 			</div>
+			<input type="text" name="task-title" autocomplete="off" data-bind="value: title, visible: isNew, event: {focusout: manageFocusOutTaskTitle}" />
 		</div>
 	</div>
 	<div data-bind="visible: loading" class="spinner-border">
 		<span class="visually-hidden">Cargando...</span>
 	</div>
+	<div data-bind="visible: noTasks">
+		No hay tareas para mostrar
+	</div>
 </div>
 
 @section Scripts{
+	<script src="~/js/UserTasks.js" asp-append-version="true"></script>
+
 	<script>
-		const taskListViewModel = {
-			userTasks : ko.observableArray([]),
-			loading: ko.observable(true)
+		function taskListViewModelFn()
+		{
+			var self = this;
+			self.userTasks = ko.observableArray([]);
+			self.loading = ko.observable(true);
+			self.noTasks = ko.pureComputed(function(){
+				if(self.loading()){
+					return false;
+				}
+				return self.userTasks().length === 0;
+			});
 		}
+
+		function taskElementViewModel({id, title}){
+			var self = this;
+			self.id = ko.observable(id);
+			self.title = ko.observable(title);
+			self.isNew = ko.pureComputed(function(){
+				return self.id() == 0; 
+			});
+		}
+
+		const taskListViewModel = new taskListViewModelFn();
 
 		setTimeout(
 		() => {
-			taskListViewModel.userTasks.push({title: 'Tarea 1'});
 			taskListViewModel.loading(false);
 		}
-		, 2000);
+		, 100);
 
 		ko.applyBindings(taskListViewModel, document.getElementById('task-list-container'));
 	</script>
