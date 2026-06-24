@@ -32,6 +32,8 @@
 	<script src="~/js/UserTasks.js" asp-append-version="true"></script>
 
 	<script>
+		const userTasksUrl = '/UserTask';
+
 		function taskListViewModelFn()
 		{
 			var self = this;
@@ -56,11 +58,7 @@
 
 		const taskListViewModel = new taskListViewModelFn();
 
-		setTimeout(
-		() => {
-			taskListViewModel.loading(false);
-		}
-		, 100);
+		getUserTasks();
 
 		ko.applyBindings(taskListViewModel, document.getElementById('task-list-container'));
 	</script>

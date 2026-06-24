@@ -66,6 +66,8 @@ builder.Services.AddLocalization(options =>
     options.ResourcesPath = "Resources";
 });
 
+builder.Services.AddTransient<IUserServices, UserService>();
+
 var app = builder.Build();
 
 var supportedUiCultures = new[] {"es", "en"};
