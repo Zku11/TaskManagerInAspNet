@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using TaskManagerInAspNet;
 using TaskManagerInAspNet.Servicios;
@@ -67,6 +68,7 @@ builder.Services.AddLocalization(options =>
 });
 
 builder.Services.AddTransient<IUserServices, UserService>();
+builder.Services.AddAutoMapper(c => c.AddMaps(typeof(Program)));
 
 var app = builder.Build();
 

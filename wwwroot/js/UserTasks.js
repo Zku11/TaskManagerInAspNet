@@ -27,7 +27,7 @@ async function manageFocusOutTaskTitle(userTaskP) {
         userTaskP.id(jsonresponse.id);
     }
     else {
-        //Show error message
+        handleErrorApi(response);
     }
 }
 
@@ -43,6 +43,7 @@ async function getUserTasks() {
         }
     );
     if (!response.ok) {
+        handleErrorApi(response);
         return;
     }
     const jsonresponse = await response.json();
