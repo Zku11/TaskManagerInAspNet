@@ -13,11 +13,11 @@
 </div>
 
 <div id="task-list-container" class="text-center">
-	<div class="text-start" data-bind="foreach: userTasks">
+	<div id="reorderable" class="text-start" data-bind="foreach: userTasks">
 		<div name="task" class="border mb-2 p-2" style="cursor: pointer">
 			<div data-bind="text: title, hidden: isNew" class="fw-bold">
 			</div>
-			<input type="text" name="task-title" autocomplete="off" data-bind="value: title, visible: isNew, event: {focusout: manageFocusOutTaskTitle}" />
+			<input type="text" name="task-title" autocomplete="off" data-bind="value: title, visible: isNew, attr: {'data-id': id} , event: {focusout: manageFocusOutTaskTitle}" />
 		</div>
 	</div>
 	<div data-bind="visible: loading" class="spinner-border">

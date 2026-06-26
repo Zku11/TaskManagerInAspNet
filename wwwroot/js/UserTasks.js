@@ -53,3 +53,40 @@ async function getUserTasks() {
     });
     taskListViewModel.loading(false);
 }
+
+async function updateUserTaskOrder() {
+    const ids = getUserTasksId();
+    await sendUserTasksIdsToBackend(ids);
+    const sortedArray = taskListViewModel.userTasks.sorted(function (a, b) {
+        return ids.indexOf(a.id().toString()) - ids.indexOf(b.id().toString());
+    });
+    taskListViewModel.userTasks([]);
+    taskListViewModel.userTasks(sortedArray);
+}
+
+function getUserTasksId() {
+    const ids = $("[name=task-title]").map(function () {
+        return $(this).attr("data-id");
+    }).get();
+    return ids;
+}
+
+async function sendUserTasksIdsToBackend(ids) {
+    var data = JSON.stringify(ids);
+    await fetch(`${userTasksUrl}/sort`, {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
+$(function () {
+    $("#reorderable").sortable({
+        axis: 'y',
+        stop: async function () {
+            await updateUserTaskOrder();
+        }
+    })
+});

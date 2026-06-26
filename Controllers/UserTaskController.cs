@@ -28,7 +28,7 @@ namespace TaskManagerInAspNet.Controllers
             var userId = userServices.GetUserId();
             var userTask = await applicationDBContext.UserTasks
                 .Where(t => t.CreatorUserId == userId)
-                .OrderByDescending(t => t.Order)
+                .OrderBy(t => t.Order)
                 .ProjectTo<UserTaskDTO>(mapper.ConfigurationProvider)
                 .ToListAsync();
             return userTask;
@@ -54,6 +54,27 @@ namespace TaskManagerInAspNet.Controllers
             applicationDBContext.Add(newUserTask);
             await applicationDBContext.SaveChangesAsync();
             return newUserTask;    
+        }
+
+        [HttpPost("sort")]
+        public async Task<IActionResult> sort([FromBody] int[] ids)
+        {
+            var userId = userServices.GetUserId();
+            var userTasks = await applicationDBContext.UserTasks.Where(t => t.CreatorUserId == userId).ToListAsync();
+            var tasksIds = userTasks.Select(t => t.Id);
+            var idsFromOtherUser = ids.Except(tasksIds).ToList();
+            if (idsFromOtherUser.Any()) {
+                return Forbid();
+            }
+            var tasksDictionary = userTasks.ToDictionary(x => x.Id);
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                var userTask = tasksDictionary[id];
+                userTask.Order = i + 1;
+            }
+            await applicationDBContext.SaveChangesAsync();
+            return Ok();
         }
     }
 }
